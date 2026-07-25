@@ -33,13 +33,18 @@ pipeline {
 
 
                 stage('Product Service') {
-                    steps {
-                        sh '''
-                        cd product_service
-                        ./mvnw test
-                        '''
-                    }
-                }
+    environment {
+        MEDIA_SERVICE_URL = 'http://media-service:8083'
+        SPRING_DATA_MONGODB_URI = 'mongodb://localhost/test'
+        SPRING_KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
+    }
+    steps {
+        sh '''
+        cd product_service
+        ./mvnw test
+        '''
+    }
+}
 
 
                 stage('Gateway Service') {
