@@ -83,29 +83,28 @@ pipeline {
 
         stage('Docker Build') {
 
-            steps {
+    steps {
 
-                sh '''
-                docker compose build
-                '''
+        sh '''
+        docker compose --env-file .env build
+        '''
 
-            }
+    }
 
-        }
+}
 
 
+stage('Deploy') {
 
-        stage('Deploy') {
+    steps {
 
-            steps {
+        sh '''
+        docker compose --env-file .env up -d
+        '''
 
-                sh '''
-                docker compose up -d
-                '''
+    }
 
-            }
-
-        }
+}
 
 
     }
