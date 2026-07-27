@@ -86,17 +86,17 @@ pipeline {
 
 
 
-    agent {
+    // agent {
 
-        docker {
+    //     docker {
 
-            image 'trion/ng-cli-karma:latest'
+    //         image 'trion/ng-cli-karma:latest'
 
-            reuseNode true
+    //         reuseNode true
 
-        }
+    //     }
 
-    }
+    // }
 
 
 
