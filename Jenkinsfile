@@ -106,12 +106,10 @@ pipeline {
 
         cd client
 
-        npm ci
+        npm install
 
-        npm test -- --watch=false --browsers=ChromeHeadlessCI --progress=false --watch=false
+        npm test -- --watch=false --browsers=ChromeHeadless
 
-        echo "====== AFTER TEST ======"
-        exit 0
         '''
 
     }
