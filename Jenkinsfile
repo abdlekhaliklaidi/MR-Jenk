@@ -83,14 +83,22 @@ pipeline {
 
 
         stage('Frontend Test') {
-            steps {
-                sh '''
-                cd frontend
-                npm install
-                npm test
-                '''
-            }
+
+    agent {
+        docker {
+            image 'trion/ng-cli-karma:latest'
+            reuseNode true
         }
+    }
+
+    steps {
+        sh '''
+        cd client
+        npm install
+        npm test -- --watch=false --browsers=ChromeHeadless
+        '''
+    }
+}
 
 
         stage('Docker Build') {
