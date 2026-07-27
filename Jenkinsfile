@@ -1,7 +1,11 @@
 pipeline {
 
     agent any
-
+    
+    tools {
+        nodejs 'node18'
+    }
+    
     environment {
         COMPOSE_FILE = "docker-compose.yml"
         ENV_FILE = ".env"
@@ -106,7 +110,7 @@ pipeline {
 
         cd client
 
-        npm install
+        npm ci
 
         npm test -- --watch=false --browsers=ChromeHeadless
 
