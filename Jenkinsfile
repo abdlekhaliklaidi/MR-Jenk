@@ -58,6 +58,10 @@ pipeline {
     environment {
         JWT_SECRET = 'test-secret-key-test-secret-key-test-secret-key-123456'
         SSL_KEYSTORE_PASSWORD = 'changeit'
+
+        USER_SERVICE_URL = 'http://localhost:8081'
+        PRODUCT_SERVICE_URL = 'http://localhost:8082'
+        MEDIA_SERVICE_URL = 'http://localhost:8083'
     }
     steps {
         sh '''
