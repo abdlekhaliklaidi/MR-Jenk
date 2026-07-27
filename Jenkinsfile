@@ -1,11 +1,7 @@
 pipeline {
 
     agent any
-    
-    tools {
-        nodejs 'node18'
-    }
-    
+
     environment {
         COMPOSE_FILE = "docker-compose.yml"
         ENV_FILE = ".env"
@@ -90,17 +86,17 @@ pipeline {
 
 
 
-    // agent {
+    agent {
 
-    //     docker {
+        docker {
 
-    //         image 'trion/ng-cli-karma:latest'
+            image 'trion/ng-cli-karma:latest'
 
-    //         reuseNode true
+            reuseNode true
 
-    //     }
+        }
 
-    // }
+    }
 
 
 
