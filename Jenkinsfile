@@ -98,7 +98,7 @@ pipeline {
 
         npm ci
 
-        timeout 2m npm test -- --watch=false --progress=false --browsers=ChromeHeadless
+        npm test -- --watch=false --progress=false --browsers=ChromeHeadless --no-watch
 
         echo "========== TEST FINISHED =========="
         '''
