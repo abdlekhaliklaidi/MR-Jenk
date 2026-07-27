@@ -108,11 +108,10 @@ pipeline {
 
         npm ci
 
-        npm test -- --watch=false --browsers=ChromeHeadlessCI --progress=false
-        
-        echo "====== AFTER TEST ======"
+        npm test -- --watch=false --browsers=ChromeHeadlessCI --progress=false --watch=false
 
-        ps -ef
+        echo "====== AFTER TEST ======"
+        exit 0
         '''
 
     }

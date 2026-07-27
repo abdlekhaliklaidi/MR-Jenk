@@ -1,34 +1,19 @@
+process.env.CHROME_BIN = require('puppeteer').executablePath();
+
 module.exports = function (config) {
   config.set({
+
     basePath: '',
 
     frameworks: [
-      'jasmine',
-      '@angular-devkit/build-angular'
+      'jasmine'
     ],
 
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
-      require('karma-jasmine-html-reporter'),
-      require('karma-coverage'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
-
-    client: {
-      jasmine: {}
-    },
-
-    reporters: ['progress'],
-
-    coverageReporter: {
-      dir: require('path').join(__dirname, './coverage'),
-      subdir: '.',
-      reporters: [
-        { type: 'html' },
-        { type: 'text-summary' }
-      ]
-    },
 
     customLaunchers: {
       ChromeHeadlessCI: {
@@ -36,16 +21,32 @@ module.exports = function (config) {
         flags: [
           '--no-sandbox',
           '--disable-dev-shm-usage',
-          '--disable-gpu'
+          '--disable-gpu',
+          '--no-first-run',
+          '--no-default-browser-check'
         ]
       }
     },
 
-    browsers: ['ChromeHeadlessCI'],
+    browsers: [
+      'ChromeHeadlessCI'
+    ],
 
     singleRun: true,
+
     autoWatch: false,
 
-    restartOnFileChange: false
+    browserDisconnectTimeout: 10000,
+
+    browserDisconnectTolerance: 1,
+
+    browserNoActivityTimeout: 10000,
+
+    captureTimeout: 10000,
+
+    reporters: [
+      'progress'
+    ]
+
   });
 };
