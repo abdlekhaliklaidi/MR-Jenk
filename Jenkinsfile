@@ -4,8 +4,9 @@ pipeline {
 
 
     environment {
-        COMPOSE_FILE = "docker-compose.yml"
-    }
+    COMPOSE_FILE = "docker-compose.yml"
+    ENV_FILE = ".env"
+}
 
 
     stages {
@@ -23,13 +24,19 @@ pipeline {
             parallel {
 
                 stage('User Service') {
-                    steps {
-                        sh '''
-                        cd user_service
-                        ./mvnw test
-                        '''
-                    }
-                }
+    environment {
+        JWT_SECRET = 'test-secret-key-test-secret-key-test-secret-key-123456'
+        SPRING_DATA_MONGODB_URI = 'mongodb://localhost/test'
+        SPRING_KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
+        SPRING_DATA_REDIS_HOST = 'localhost'
+    }
+    steps {
+        sh '''
+        cd user_service
+        ./mvnw test
+        '''
+    }
+}
 
 
                 stage('Product Service') {
@@ -48,13 +55,17 @@ pipeline {
 
 
                 stage('Gateway Service') {
-                    steps {
-                        sh '''
-                        cd gateway_service
-                        ./mvnw test
-                        '''
-                    }
-                }
+    environment {
+        JWT_SECRET = 'test-secret-key-test-secret-key-test-secret-key-123456'
+        SSL_KEYSTORE_PASSWORD = 'changeit'
+    }
+    steps {
+        sh '''
+        cd gateway_service
+        ./mvnw test
+        '''
+    }
+}
 
 
                 stage('Media Service') {
