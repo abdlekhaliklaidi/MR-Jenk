@@ -1,13 +1,16 @@
 module.exports = function (config) {
   config.set({
 
+    basePath: '',
+
     frameworks: [
       'jasmine'
     ],
 
     plugins: [
       require('karma-jasmine'),
-      require('karma-chrome-launcher')
+      require('karma-chrome-launcher'),
+      require('@angular-devkit/build-angular/plugins/karma')
     ],
 
     customLaunchers: {
@@ -21,10 +24,17 @@ module.exports = function (config) {
       }
     },
 
-    browsers: ['ChromeHeadlessCI'],
+    browsers: [
+      'ChromeHeadlessCI'
+    ],
 
     singleRun: true,
-    autoWatch: false
+
+    autoWatch: false,
+
+    reporters: [
+      'progress'
+    ]
 
   });
 };

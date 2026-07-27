@@ -91,17 +91,21 @@ pipeline {
     }
 
     steps {
-        sh '''
-        set -x
+        timeout(time: 5, unit: 'MINUTES') {
+            sh '''
+                set -x
 
-        cd client
+                cd client
 
-        npm ci
+                npm ci
 
-        npm test -- --watch=false --browsers=ChromeHeadless --progress=false
+                npm test -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+
+                echo "========== FRONTEND TEST DONE =========="
+            '''
+        }
 
         echo "========== TEST FINISHED =========="
-        '''
     }
 }
 
