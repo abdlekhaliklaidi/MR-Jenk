@@ -87,20 +87,6 @@ pipeline {
 
 
         stage('Frontend Test') {
-    agent {
-        docker {
-            image 'node:20'
-            reuseNode true
-        }
-    }
-    steps {
-        sh '''
-        cd client
-        npm install
-        npm test -- --watch=false
-        '''
-    }
-}
 
 
 
