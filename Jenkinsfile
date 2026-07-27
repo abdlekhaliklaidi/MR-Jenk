@@ -83,30 +83,40 @@ pipeline {
 
 
         stage('Frontend Test') {
+
+
+
     agent {
+
         docker {
+
             image 'trion/ng-cli-karma:latest'
+
             reuseNode true
+
         }
+
     }
+
+
 
     steps {
-        timeout(time: 5, unit: 'MINUTES') {
-            sh '''
-                set -x
 
-                cd client
+        sh '''
 
-                npm ci
+        cd client
 
-                npm test -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+        npm ci
 
-                echo "========== FRONTEND TEST DONE =========="
-            '''
-        }
+        npm test -- --watch=false --browsers=ChromeHeadlessCI --progress=false
+        
+        echo "====== AFTER TEST ======"
 
-        echo "========== TEST FINISHED =========="
+        ps -ef
+        '''
+
     }
+
 }
 
 
