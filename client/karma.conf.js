@@ -1,5 +1,3 @@
-process.env.CHROME_BIN = require('puppeteer').executablePath();
-
 module.exports = function (config) {
   config.set({
 
@@ -21,9 +19,7 @@ module.exports = function (config) {
         flags: [
           '--no-sandbox',
           '--disable-dev-shm-usage',
-          '--disable-gpu',
-          '--no-first-run',
-          '--no-default-browser-check'
+          '--disable-gpu'
         ]
       }
     },
@@ -35,14 +31,6 @@ module.exports = function (config) {
     singleRun: true,
 
     autoWatch: false,
-
-    browserDisconnectTimeout: 10000,
-
-    browserDisconnectTolerance: 1,
-
-    browserNoActivityTimeout: 10000,
-
-    captureTimeout: 10000,
 
     reporters: [
       'progress'
