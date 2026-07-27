@@ -83,7 +83,6 @@ pipeline {
 
 
         stage('Frontend Test') {
-
     agent {
         docker {
             image 'trion/ng-cli-karma:latest'
@@ -93,9 +92,15 @@ pipeline {
 
     steps {
         sh '''
+        set -x
+
         cd client
-        npm install
+
+        npm ci
+
         npm test -- --watch=false --browsers=ChromeHeadless
+
+        echo "========== TEST FINISHED =========="
         '''
     }
 }
