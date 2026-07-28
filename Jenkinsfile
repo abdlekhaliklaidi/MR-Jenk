@@ -108,14 +108,27 @@ pipeline {
     }
 }
 
-
+        
         stage('Docker Build') {
-            steps {
-                sh '''
-                docker compose --env-file .env build
-                '''
-            }
-        }
+    steps {
+        sh '''
+        cat > .env <<EOF
+JWT_SECRET=mysecretkeymysecretkeymysecretkey123456789012345678901234567890
+SSL_KEYSTORE_PASSWORD=changeit
+KAFKA_CLUSTER_ID=lQUQBGK0Rwmv0tiwt3p16g
+USER_DB_URI=mongodb://mongodb:27017/user_db
+PRODUCT_DB_URI=mongodb://mongodb:27017/product_db
+REDIS_HOST=redis
+KAFKA_HOST=kafka:9092
+MEDIA_SERVICE_URL=http://media-service:8083/
+USER_SERVICE_URL=http://user-service:8081/
+PRODUCT_SERVICE_URL=http://product-service:8082/
+EOF
+
+        docker compose --env-file .env build
+        '''
+    }
+}
 
 
         stage('Deploy') {
