@@ -28,7 +28,7 @@ pipeline {
                     steps {
                         sh '''
                         cd user_service
-                        ./mvnw test
+                        ./mvnw test -Dspring.autoconfigure.exclude=org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration,org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
                         '''
                     }
                 }
@@ -42,7 +42,7 @@ pipeline {
                     steps {
                         sh '''
                         cd product_service
-                        ./mvnw test
+                        ./mvnw test -Dspring.autoconfigure.exclude=org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration,org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
                         '''
                     }
                 }
@@ -67,7 +67,7 @@ pipeline {
                     steps {
                         sh '''
                         cd media_service
-                        ./mvnw test
+                        ./mvnw test -Dspring.autoconfigure.exclude=org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
                         '''
                     }
                 }
@@ -80,7 +80,7 @@ pipeline {
                 sh '''
                 cd client
                 npm ci
-                npm test -- --watch=false --browsers=ChromeHeadlessCI
+                npm test -- --watch=false --browsers=ChromeHeadless
                 '''
             }
         }
