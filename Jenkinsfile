@@ -83,39 +83,30 @@ pipeline {
 
 
         stage('Frontend Test') {
-
-
-
     agent {
-
         docker {
-
             image 'trion/ng-cli-karma:latest'
-
             reuseNode true
-
         }
-
     }
 
-
-
     steps {
-
         sh '''
-
         cd client
 
         npm ci
 
         npx ng test \
-        --karma-config=karma.conf.js \
-        --watch=false
+          --karma-config=karma.conf.js \
+          --watch=false \
+          --browsers=ChromeHeadlessCI
 
+        # Kill any remaining Karma/Chrome processes
+        pkill -f karma || true
+        pkill -f chrome || true
+        pkill -f chromium || true
         '''
-
     }
-
 }
 
 
