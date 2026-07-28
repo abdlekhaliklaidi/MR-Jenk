@@ -138,6 +138,14 @@ EOF
                 docker compose --env-file .env up -d
                 '''
             }
+
+            post {
+        failure {
+            sh '''
+            docker compose down
+            docker compose up -d
+            '''
+            }
         }
 
     }
