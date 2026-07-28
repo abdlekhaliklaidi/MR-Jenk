@@ -98,13 +98,23 @@ pipeline {
 
         npx ng test \
           --karma-config=karma.conf.js \
-          --watch=false \
-          --browsers=ChromeHeadlessCI
+          --watch=false &
+        
+        PID=$!
 
-        # Kill any remaining Karma/Chrome processes
-        pkill -f karma || true
-        pkill -f chrome || true
-        pkill -f chromium || true
+        sleep 15
+
+        echo "===== NODE PROCESSES ====="
+        ps -ef
+
+        echo "===== CHROME ====="
+        pgrep -a chrome || true
+        pgrep -a chromium || true
+
+        echo "===== WAIT ====="
+        wait $PID
+
+        echo "FINISHED"
         '''
     }
 }
