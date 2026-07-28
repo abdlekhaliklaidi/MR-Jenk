@@ -76,7 +76,6 @@ pipeline {
                     steps {
                         sh '''
                         cd media_service
-                        chmod +x mvnw
                         ./mvnw test
                         '''
                     }
