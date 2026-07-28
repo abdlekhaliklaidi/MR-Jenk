@@ -18,7 +18,7 @@ pipeline {
         stage('Start Databases') {
             steps {
                 sh '''
-                docker compose --env-file .env up -d mongodb kafka redis
+                docker-compose --env-file .env up -d mongodb kafka redis
                 sleep 5
                 '''
             }
@@ -110,7 +110,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 sh '''
-                docker compose --env-file .env build
+                docker-compose --env-file .env build
                 '''
             }
         }
@@ -119,7 +119,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                docker compose --env-file .env up -d
+                docker-compose --env-file .env up -d
                 '''
             }
         }
@@ -135,7 +135,7 @@ pipeline {
 
         failure {
             echo "❌ CI/CD FAILED"
-            sh 'docker compose down'
+            sh 'docker-compose down'
         }
 
     }
