@@ -134,6 +134,7 @@ EOF
         stage('Deploy') {
             steps {
                 sh '''
+                docker compose --env-file .env down || true
                 docker compose --env-file .env up -d
                 '''
             }
