@@ -15,9 +15,7 @@ pipeline {
             }
         }
 
-
         stage('Backend Tests') {
-
             parallel {
 
                 stage('User Service') {
@@ -35,7 +33,6 @@ pipeline {
                     }
                 }
 
-
                 stage('Product Service') {
                     environment {
                         MEDIA_SERVICE_URL = 'http://media-service:8083'
@@ -50,12 +47,10 @@ pipeline {
                     }
                 }
 
-
                 stage('Gateway Service') {
                     environment {
                         JWT_SECRET = 'test-secret-key-test-secret-key-test-secret-key-123456'
                         SSL_KEYSTORE_PASSWORD = 'changeit'
-
                         USER_SERVICE_URL = 'http://localhost:8081'
                         PRODUCT_SERVICE_URL = 'http://localhost:8082'
                         MEDIA_SERVICE_URL = 'http://localhost:8083'
@@ -67,7 +62,6 @@ pipeline {
                         '''
                     }
                 }
-
 
                 stage('Media Service') {
                     steps {
@@ -81,41 +75,15 @@ pipeline {
             }
         }
 
-
         stage('Frontend Test') {
-
-
-
-    agent {
-
-        docker {
-
-            image 'trion/ng-cli-karma:latest'
-
-            reuseNode true
-
+            steps {
+                sh '''
+                cd client
+                npm ci
+                npm test -- --watch=false --browsers=ChromeHeadlessCI
+                '''
+            }
         }
-
-    }
-
-
-
-    steps {
-
-        sh '''
-
-        cd client
-
-        npm ci
-
-        npm test -- --watch=false --browsers=ChromeHeadless
-
-        '''
-
-    }
-
-}
-
 
         stage('Docker Build') {
             steps {
@@ -124,7 +92,6 @@ pipeline {
                 '''
             }
         }
-
 
         stage('Deploy') {
             steps {
@@ -136,17 +103,12 @@ pipeline {
 
     }
 
-
     post {
-
         success {
             echo "🚀 CI/CD SUCCESS"
         }
-
         failure {
             echo "❌ CI/CD FAILED"
         }
-
     }
-
 }
