@@ -30,6 +30,7 @@ pipeline {
                     steps {
                         sh '''
                         cd user_service
+                        chmod +x mvnw
                         ./mvnw test
                         '''
                     }
@@ -45,6 +46,7 @@ pipeline {
                     steps {
                         sh '''
                         cd product_service
+                        chmod +x mvnw
                         ./mvnw test
                         '''
                     }
@@ -63,6 +65,7 @@ pipeline {
                     steps {
                         sh '''
                         cd gateway_service
+                        chmod +x mvnw
                         ./mvnw test
                         '''
                     }
@@ -73,6 +76,7 @@ pipeline {
                     steps {
                         sh '''
                         cd media_service
+                        chmod +x mvnw
                         ./mvnw test
                         '''
                     }
@@ -142,10 +146,11 @@ EOF
             post {
         failure {
             sh '''
-            docker compose down
-            docker compose up -d
+            docker compose --env-file .env down
+            docker compose --env-file .env up -d
             '''
-            }
+        }
+    }
         }
 
     }
