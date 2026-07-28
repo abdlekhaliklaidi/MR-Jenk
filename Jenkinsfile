@@ -15,14 +15,6 @@ pipeline {
             }
         }
 
-        stage('Start Databases') {
-            steps {
-                sh '''
-                docker-compose --env-file .env up -d mongodb kafka redis
-                sleep 5
-                '''
-            }
-        }
 
         stage('Backend Tests') {
 
@@ -31,7 +23,7 @@ pipeline {
                 stage('User Service') {
                     environment {
                         JWT_SECRET = 'test-secret-key-test-secret-key-test-secret-key-123456'
-                        SPRING_DATA_MONGODB_URI = 'mongodb://localhost:27017/test'
+                        SPRING_DATA_MONGODB_URI = 'mongodb://localhost/test'
                         SPRING_KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
                         SPRING_DATA_REDIS_HOST = 'localhost'
                     }
@@ -47,7 +39,7 @@ pipeline {
                 stage('Product Service') {
                     environment {
                         MEDIA_SERVICE_URL = 'http://media-service:8083'
-                        SPRING_DATA_MONGODB_URI = 'mongodb://localhost:27017/test'
+                        SPRING_DATA_MONGODB_URI = 'mongodb://localhost/test'
                         SPRING_KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
                     }
                     steps {
@@ -91,26 +83,44 @@ pipeline {
 
 
         stage('Frontend Test') {
-            agent {
-                docker {
-                    image 'trion/ng-cli-karma:latest'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                cd client
-                npm ci
-                npx ng test --watch=false --browsers=ChromeHeadlessCI
-                '''
-            }
+
+
+
+    agent {
+
+        docker {
+
+            image 'trion/ng-cli-karma:latest'
+
+            reuseNode true
+
         }
+
+    }
+
+
+
+    steps {
+
+        sh '''
+
+        cd client
+
+        npm ci
+
+        npm test -- --watch=false --browsers=ChromeHeadlessCI
+
+        '''
+
+    }
+
+}
 
 
         stage('Docker Build') {
             steps {
                 sh '''
-                docker-compose --env-file .env build
+                docker compose --env-file .env build
                 '''
             }
         }
@@ -119,7 +129,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                docker-compose --env-file .env up -d
+                docker compose --env-file .env up -d
                 '''
             }
         }
@@ -135,7 +145,6 @@ pipeline {
 
         failure {
             echo "❌ CI/CD FAILED"
-            sh 'docker-compose down'
         }
 
     }
