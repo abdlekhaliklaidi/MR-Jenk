@@ -85,36 +85,25 @@ pipeline {
         stage('Frontend Test') {
     agent {
         docker {
-            image 'trion/ng-cli-karma:latest'
+            image 'node:20-bookworm'
             reuseNode true
         }
     }
 
     steps {
         sh '''
+        apt-get update
+        apt-get install -y chromium
+
+        export CHROME_BIN=/usr/bin/chromium
+
         cd client
 
         npm ci
 
-        npx ng test \
-          --karma-config=karma.conf.js \
-          --watch=false &
-        
-        PID=$!
-
-        sleep 15
-
-        echo "===== NODE PROCESSES ====="
-        ps -ef
-
-        echo "===== CHROME ====="
-        pgrep -a chrome || true
-        pgrep -a chromium || true
-
-        echo "===== WAIT ====="
-        wait $PID
-
-        echo "FINISHED"
+        CI=true npx ng test \
+          --watch=false \
+          --browsers=ChromeHeadlessCI
         '''
     }
 }
