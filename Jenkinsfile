@@ -108,7 +108,9 @@ pipeline {
 
         npm ci
 
-        npm test -- --watch=false --browsers=ChromeHeadlessCI
+        npx ng test \
+        --karma-config=karma.conf.js \
+        --watch=false
 
         '''
 
