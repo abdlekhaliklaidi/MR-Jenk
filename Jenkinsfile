@@ -117,16 +117,21 @@ pipeline {
     steps {
         sh '''
         cat > .env <<EOF
-JWT_SECRET=mysecretkeymysecretkeymysecretkey123456789012345678901234567890
-SSL_KEYSTORE_PASSWORD=changeit
-KAFKA_CLUSTER_ID=XUsgXG_aQECnYlwcwmQhtQ
-USER_DB_URI=mongodb://mongodb:27017/user_db
-PRODUCT_DB_URI=mongodb://mongodb:27017/product_db
-REDIS_HOST=redis
-KAFKA_HOST=kafka:9092
-MEDIA_SERVICE_URL=http://media-service:8083/
-USER_SERVICE_URL=http://user-service:8081/
-PRODUCT_SERVICE_URL=http://product-service:8082/
+        
+    JWT_SECRET = credentials('jwt-secret')
+    SSL_KEYSTORE_PASSWORD = credentials('ssl-keystore-password')
+    KAFKA_CLUSTER_ID = credentials('kafka-cluster-id')
+
+    USER_DB_URI = credentials('user-db-uri')
+    PRODUCT_DB_URI = credentials('product-db-uri')
+
+    REDIS_HOST = credentials('redis-host')
+    KAFKA_HOST = credentials('kafka-host')
+
+    MEDIA_SERVICE_URL = credentials('media-service-url')
+    USER_SERVICE_URL = credentials('user-service-url')
+    PRODUCT_SERVICE_URL = credentials('product-service-url')
+
 EOF
 
         docker compose --env-file .env build
