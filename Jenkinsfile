@@ -118,7 +118,7 @@ pipeline {
         cat > .env <<EOF
 JWT_SECRET=mysecretkeymysecretkeymysecretkey123456789012345678901234567890
 SSL_KEYSTORE_PASSWORD=changeit
-KAFKA_CLUSTER_ID=lQUQBGK0Rwmv0tiwt3p16g
+KAFKA_CLUSTER_ID=XUsgXG_aQECnYlwcwmQhtQ
 USER_DB_URI=mongodb://mongodb:27017/user_db
 PRODUCT_DB_URI=mongodb://mongodb:27017/product_db
 REDIS_HOST=redis
