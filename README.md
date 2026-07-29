@@ -32,6 +32,95 @@
 ```
 
 ---
+# 🚀 CI/CD Pipeline Stages
+
+1. Checkout
+
+Jenkins downloads the latest source code from Git.
+
+2. Backend Tests
+
+Backend services are tested in parallel:
+
+User Service
+Product Service
+Gateway Service
+Media Service
+
+Technologies:
+
+Java
+Spring Boot
+Maven
+
+Example:
+
+./mvnw test
+
+3. Frontend Tests
+
+Frontend tests are executed using Angular and Chrome Headless.
+
+Environment:
+
+Node.js 20
+Chromium
+Angular CLI
+
+Command:
+
+npm ci
+
+CI=true npx ng test \
+ --watch=false \
+ --browsers=ChromeHeadlessCI
+
+# 🐳 Docker Build
+
+The pipeline generates environment variables and builds all Docker images:
+
+docker compose --env-file .env build
+💾 Backup Before Deployment
+
+Before every deployment Jenkins creates a backup containing:
+
+Environment file .env
+Running Docker images
+MongoDB database dump
+
+
+MongoDB backup:
+
+mongodump --archive --gzip
+🚀 Deployment
+
+The deployment process:
+
+docker compose down
+
+docker compose up -d
+
+After deployment Jenkins verifies running containers.
+
+# 🔄 Automatic Rollback
+
+If deployment fails Jenkins automatically:
+
+Stops the failed deployment
+Loads previous Docker images
+Restores MongoDB backup
+Restores environment variables
+Starts the previous version
+
+Rollback example:
+
+docker load -i backup/image.tar
+
+mongorestore \
+ --archive=mongo_backup.archive \
+ --gzip \
+ --drop
+
 
 # Features
 
@@ -98,6 +187,10 @@
 ├── client/
 │
 ├── docker-compose.yml
+|
+|__ Dockerfile.jenkins
+|
+|__ Jenkinsfile
 │
 └── README.md
 ```
@@ -378,7 +471,7 @@ Stores uploaded images.
 
 # Author
 
-Ali Louhab
+Laidi Abdelkhalik
 
 ---
 
