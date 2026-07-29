@@ -244,10 +244,24 @@ EOF
 
         success {
             echo "🚀 CI/CD SUCCESS"
+             script {
+                mail(
+                    to: 'abdlekhaliklaidi@gmail.com',
+                    subject: "✅ SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                    body: "Build passed.\nLogs: ${env.BUILD_URL}"
+                )
+            }
         }
 
         failure {
             echo "❌ CI/CD FAILED"
+             script {
+                mail(
+                    to: 'abdlekhaliklaidi@gmail.com',
+                    subject: "❌ FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                    body: "Build failed.\nLogs: ${env.BUILD_URL}"
+                )
+            }
         }
 
     }
