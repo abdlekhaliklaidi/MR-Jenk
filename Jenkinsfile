@@ -128,7 +128,7 @@ USER_SERVICE_URL=http://user-service:8081/
 PRODUCT_SERVICE_URL=http://product-service:8082/
 EOF
 
-        docker compose build
+        docker compose --env-file .env build
         '''
     }
 }
