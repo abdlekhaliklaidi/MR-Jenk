@@ -132,25 +132,110 @@ EOF
         '''
     }
 }
+        
+        stage('Backup Before Deploy') {
+    steps {
+        sh '''
+        echo "📦 Creating deployment backup..."
 
+        TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+        mkdir -p backups/$TIMESTAMP
+
+        echo $TIMESTAMP > backups/latest
+
+        # Backup env
+        cp .env backups/$TIMESTAMP/
+
+        # Backup running docker images
+        docker compose ps -q | while read container
+        do
+            IMAGE=$(docker inspect --format='{{.Config.Image}}' $container)
+            docker save $IMAGE -o backups/$TIMESTAMP/$(echo $IMAGE | tr "/:" "_").tar
+        done
+
+
+        # MongoDB backup
+        docker exec mongodb mongodump \
+            --archive=/tmp/mongo_backup.archive \
+            --gzip
+
+        docker cp mongodb:/tmp/mongo_backup.archive \
+            backups/$TIMESTAMP/
+
+
+        echo "✅ Backup stored in backups/$TIMESTAMP"
+        '''
+    }
+}
 
         stage('Deploy') {
-            steps {
-                sh '''
-                docker compose --env-file .env down || true
-                docker compose --env-file .env up -d
-                '''
-            }
+    steps {
+        script {
 
-            post {
-        failure {
-            sh '''
-            docker compose --env-file .env down
-            docker compose --env-file .env up -d
-            '''
+            try {
+
+                sh '''
+                echo "🚀 Deploying new version..."
+
+                docker compose --env-file .env down
+
+                docker compose --env-file .env up -d
+
+                sleep 30
+
+                docker compose ps
+                '''
+
+            } catch (err) {
+
+                echo "❌ Deployment failed. Starting rollback..."
+
+                sh '''
+                TIMESTAMP=$(cat backups/latest)
+
+                echo "Restoring backup $TIMESTAMP"
+
+                docker compose down
+
+                # Restore previous images
+                for IMAGE in backups/$TIMESTAMP/*.tar
+                do
+                    docker load -i "$IMAGE"
+                done
+
+                # Start MongoDB so it can accept restore
+                docker compose up -d mongodb
+
+                until docker exec mongodb mongosh --eval "db.adminCommand('ping')" >/dev/null 2>&1
+                do
+                    echo "Waiting for MongoDB..."
+                    sleep 5
+                done
+
+                # Restore database
+                docker cp backups/$TIMESTAMP/mongo_backup.archive \
+                    mongodb:/tmp/mongo_backup.archive
+
+                docker exec mongodb mongorestore \
+                    --archive=/tmp/mongo_backup.archive \
+                    --gzip \
+                    --drop
+
+                # Restore environment
+                cp backups/$TIMESTAMP/.env .env
+
+                # Start previous version
+                docker compose --env-file .env up -d
+
+                echo "✅ Rollback completed"
+                '''
+
+                throw err
+            }
         }
     }
-        }
+}
 
     }
 
