@@ -1,4 +1,4 @@
-package buy01.user_service.service;
+package buy01.user_service;
 
 import buy01.user_service.model.User;
 import buy01.user_service.repo.UserRepository;
@@ -17,6 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Map;
 import java.util.Optional;
+import buy01.user_service.service.UserService;
+import buy01.user_service.service.UserBlacklistService;
+
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;

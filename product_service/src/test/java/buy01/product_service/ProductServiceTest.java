@@ -1,4 +1,4 @@
-package buy01.product_service.service;
+package buy01.product_service;
 
 import buy01.product_service.client.MediaClient;
 import buy01.product_service.model.Product;
@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
+import buy01.product_service.service.ProductService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
