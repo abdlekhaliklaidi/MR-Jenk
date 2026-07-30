@@ -260,7 +260,7 @@ EOF
         }
 
 
-        failuree {
+        failure {
             echo "❌ CI/CD FAILED"
              script {
                 mail(
